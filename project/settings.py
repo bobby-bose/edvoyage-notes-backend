@@ -10,12 +10,16 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'fgfdgdfgfgfgggggggggggggggggggdfgfgfg'  # Replace with a unique, secure key
+SECRET_KEY = 'fgfdgdfgfgfgggggggggggggggggggdfgfgfg'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False  # CHANGE TO FALSE FOR PRODUCTION
+DEBUG = False
 
-ALLOWED_HOSTS = ['edvoyagebackend.pythonanywhere.com', '127.0.0.1']
+ALLOWED_HOSTS = [
+    'edvoyagebackend.pythonanywhere.com', 
+    '127.0.0.1', 
+    'localhost', # Added for local development
+]
 
 # Application definition
 INSTALLED_APPS = [
@@ -41,12 +45,18 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
-CORS_ALLOWED_ORIGINS=[
-    "https://edvoyagebackend.pythonanywhere.com/",
+
+# Corrected CORS settings
+CORS_ALLOWED_ORIGINS = [
+    # Removed the trailing slash from the PythonAnywhere URL
+    "https://edvoyagebackend.pythonanywhere.com",
+    
+    # Add your local Flutter development origins here
+    # The port number (e.g., 63721) can be found in your terminal output
+    "http://localhost:58151",
+    "http://127.0.0.1:58151",
+    "http://10.0.2.2",  # For Android emulators
 ]
-
-
-
 
 ROOT_URLCONF = 'project.urls'
 
@@ -68,7 +78,6 @@ TEMPLATES = [
 WSGI_APPLICATION = 'project.wsgi.application'
 
 # Database
-# https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
@@ -77,7 +86,6 @@ DATABASES = {
 }
 
 # Password validation
-# https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
@@ -94,32 +102,19 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 LANGUAGE_CODE = 'en-us'
-
 TIME_ZONE = 'UTC'
-
 USE_I18N = True
-
 USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/5.2/howto/static-files/
-
-# This is the URL used in your templates
 STATIC_URL = '/static/'
-
-# This is the directory where 'collectstatic' will place all static files
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
-# This is a list of extra places for the collectstatic command to find static files
-# You only need this if you have static files that aren't inside an app's 'static' folder.
-STATICFILES_DIRS = [
-    # os.path.join(BASE_DIR, 'static'), # Uncomment if you have a top-level 'static' folder
-]
+STATICFILES_DIRS = []
 
 # Media files (user-uploaded content)
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 # Default primary key field type
-# https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'

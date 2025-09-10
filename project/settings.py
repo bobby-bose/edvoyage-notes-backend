@@ -16,9 +16,7 @@ SECRET_KEY = 'fgfdgdfgfgfgggggggggggggggggggdfgfgfg'
 DEBUG = False
 
 ALLOWED_HOSTS = [
-    'edvoyagebackend.pythonanywhere.com', 
-    '127.0.0.1', 
-    'localhost', # Added for local development
+    '*'
 ]
 
 # Application definition
@@ -46,17 +44,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-# Corrected CORS settings
-CORS_ALLOWED_ORIGINS = [
-    # Removed the trailing slash from the PythonAnywhere URL
-    "https://edvoyagebackend.pythonanywhere.com",
-    
-    # Add your local Flutter development origins here
-    # The port number (e.g., 63721) can be found in your terminal output
-    "http://localhost:58151",
-    "http://127.0.0.1:58151",
-    "http://10.0.2.2",  # For Android emulators
-]
+CORS_ALLOW_ALL_ORIGINS = True
 
 ROOT_URLCONF = 'project.urls'
 

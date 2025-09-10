@@ -43,10 +43,10 @@ MIDDLEWARE = [
 ]
 
 # CORS settings for production - be specific
-CORS_ALLOWED_ORIGINS = [
-    "https://your-flutter-app-domain.com", # Replace with your Flutter app's domain
+CORS_ALLOWED_ORIGIN_REGEXES = [
+    r"^http://127\.0\.0\.1:\d{1,5}$",
+    r"^http://localhost:\d{1,5}$",
 ]
-
 ROOT_URLCONF = 'project.urls'
 
 TEMPLATES = [

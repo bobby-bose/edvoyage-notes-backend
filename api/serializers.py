@@ -1,9 +1,14 @@
 # api/serializers.py
 
 from rest_framework import serializers
-from .models import Subject, Doctor, Video , MCQ, Question, Option , ClinicalCase , Flashcard , FlashcardImage
+from .models import Subject, Doctor, Video , MCQ, Question, Option , ClinicalCase , Flashcard , FlashcardImage , Category
 
 
+
+class CategorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Category
+        fields = ['id', 'name']
 
 
 class SubjectSerializer(serializers.ModelSerializer):
@@ -23,6 +28,7 @@ class DoctorSerializer(serializers.ModelSerializer):
         fields = ['id', 'name']
 
 class VideoSerializer(serializers.ModelSerializer):
+    category = CategorySerializer(read_only=True)
     # Nests the full doctor object in the video response instead of just an ID
     doctor = DoctorSerializer(read_only=True)
     # Shows the subject's name for easier display on the frontend
@@ -33,6 +39,7 @@ class VideoSerializer(serializers.ModelSerializer):
         fields = [
             'id',
             'title',
+            'category',
             'video_url',
             'logo',
             'duration_in_minutes',
@@ -58,12 +65,13 @@ class QuestionSerializer(serializers.ModelSerializer):
 
 
 class MCQSerializer(serializers.ModelSerializer):
+    category = CategorySerializer(read_only=True)
     questions = QuestionSerializer(many=True, read_only=True)
     subject = SubjectSerializer(read_only=True)
 
     class Meta:
         model = MCQ
-        fields = ['id', 'title', 'subject', 'is_free', 'logo', 'questions']
+        fields = ['id', 'title', 'subject', 'is_free', 'logo', 'questions', 'category']
 
 
 class ClinicalCaseSerializer(serializers.ModelSerializer):
@@ -73,8 +81,9 @@ class ClinicalCaseSerializer(serializers.ModelSerializer):
     
     # Use StringRelatedField to show the name of the doctor/subject
     # instead of just their ID. This is read-only.
+    category = CategorySerializer(read_only=True)
     doctor_name = serializers.StringRelatedField(source='doctor', read_only=True)
-    
+    subject_name = serializers.CharField(source='subject.name', read_only=True)
     
     class Meta:
         model = ClinicalCase
@@ -84,7 +93,8 @@ class ClinicalCaseSerializer(serializers.ModelSerializer):
             'case_title',
             'doctor',
             'doctor_name',
-            'subject',
+            'subject_name',
+            'category',
             
             'gather_equipments',
             'introduction',
@@ -103,8 +113,7 @@ class ClinicalCaseSerializer(serializers.ModelSerializer):
         }
 # In your app's serializers.py file
 
-from rest_framework import serializers
-from .models import Flashcard, FlashcardImage, Subject
+
 
 class FlashcardImageSerializer(serializers.ModelSerializer):
     """
@@ -122,6 +131,7 @@ class FlashcardSerializer(serializers.ModelSerializer):
     """
     # Nested serializer for images remains the same
     images = FlashcardImageSerializer(many=True, read_only=True)
+    category = CategorySerializer(read_only=True)
     
     # Provides the string representation of the subject (e.g., "Anatomy") for reading.
     subject_name = serializers.StringRelatedField(source='subject', read_only=True)
@@ -133,6 +143,7 @@ class FlashcardSerializer(serializers.ModelSerializer):
             'id',
             'subject', # Used for writing (expects a subject ID)
             'subject_name', # Used for reading
+            'category',
             'description',
             'created_at',
             'images',

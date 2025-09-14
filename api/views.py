@@ -1,9 +1,15 @@
 # api/views.py
 
 from rest_framework import viewsets
-from .models import Subject, Doctor, Video, MCQ, Question, Option , ClinicalCase , Flashcard , FlashcardImage
+from .models import Subject, Doctor, Video, MCQ, Question, Option , ClinicalCase , Flashcard , FlashcardImage , Category
 from rest_framework import serializers
-from .serializers import SubjectSerializer, DoctorSerializer, VideoSerializer, MCQSerializer, QuestionSerializer, OptionSerializer , ClinicalCaseSerializer , FlashcardSerializer
+from .serializers import SubjectSerializer, DoctorSerializer, VideoSerializer, MCQSerializer, QuestionSerializer, OptionSerializer , ClinicalCaseSerializer , FlashcardSerializer , CategorySerializer
+from rest_framework import viewsets
+
+
+class CategoryViewSet(viewsets.ModelViewSet):
+    queryset = Category.objects.all()
+    serializer_class = CategorySerializer
 
 
 
@@ -31,7 +37,7 @@ class VideoViewSet(viewsets.ReadOnlyModelViewSet):
     """
     queryset = Video.objects.all()
     serializer_class = VideoSerializer
-    filterset_fields = ['subject', 'doctor', 'is_free']
+    filterset_fields = ['subject', 'doctor', 'is_free', 'category']
 
 
 class MCQViewSet(viewsets.ModelViewSet):
@@ -55,32 +61,16 @@ class ClinicalCaseViewSet(viewsets.ModelViewSet):
     queryset = ClinicalCase.objects.select_related('doctor').all()
     serializer_class = ClinicalCaseSerializer
 
-# In your app's serializers.py file
-
-from rest_framework import serializers
-from .models import Flashcard, FlashcardImage
-
-class FlashcardImageSerializer(serializers.ModelSerializer):
-    """
-    Serializer for the FlashcardImage model.
-    """
-    class Meta:
-        model = FlashcardImage
-        fields = ['id', 'image', 'caption']
 
 
-# In your app's views.py file
 
-from rest_framework import viewsets, permissions
-from .models import Flashcard
-from .serializers import FlashcardSerializer
 
 class FlashcardViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows flashcards to be viewed or edited.
     """
     serializer_class = FlashcardSerializer
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    
 
     def get_queryset(self):
         """

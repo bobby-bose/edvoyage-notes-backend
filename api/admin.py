@@ -7,7 +7,17 @@ from .models import (
     Question,
     Option,
     ClinicalCase,
+    Flashcard,
+    FlashcardImage,
+    Category
 )
+
+
+@admin.register(Category)
+class CategoryAdmin(admin.ModelAdmin):
+    list_display = ('name',)
+    search_fields = ('name',)
+
 
 
 @admin.register(Doctor)
@@ -74,7 +84,7 @@ class ClinicalCaseAdmin(admin.ModelAdmin):
     # How fields are organized in the edit/add form
     fieldsets = (
         ('Case Information', {
-            'fields': ('case_title', 'doctor', 'subject')
+            'fields': ('case_title','category', 'doctor', 'subject')
         }),
         ('Examination Sections', {
             'classes': ('collapse',),  # Makes this section collapsible

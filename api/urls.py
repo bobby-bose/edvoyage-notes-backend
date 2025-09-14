@@ -2,7 +2,8 @@
 
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
-from .views import SubjectViewSet, DoctorViewSet, VideoViewSet , MCQViewSet, QuestionViewSet, OptionViewSet , ClinicalCaseViewSet , FlashcardViewSet
+from .views import SubjectViewSet, DoctorViewSet, VideoViewSet , MCQViewSet, QuestionViewSet, OptionViewSet , ClinicalCaseViewSet , FlashcardViewSet , CategoryViewSet
+
 
 
 
@@ -17,7 +18,9 @@ router.register(r'questions', QuestionViewSet)
 router.register(r'options', OptionViewSet)
 router.register(r'clinical-cases', ClinicalCaseViewSet)
 router.register(r'flashcards', FlashcardViewSet, basename='flashcard')
-# The API URLs are now determined automatically by the router.
+router.register(r'categories', CategoryViewSet)
+
+
 urlpatterns = [
     path('', include(router.urls)),
 ]

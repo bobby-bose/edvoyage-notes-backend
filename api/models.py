@@ -1,5 +1,18 @@
 from django.db import models
 from django.utils import timezone
+from django.db import models
+
+
+class Category(models.Model):
+    name = models.CharField(max_length=100, unique=True)
+    
+    def __str__(self):
+        return self.name
+
+
+
+
+
 class Subject(models.Model):
     name = models.CharField(max_length=100, unique=True)
     
@@ -13,6 +26,7 @@ class Doctor(models.Model):
         return self.name
 
 class Video(models.Model):
+    category = models.ForeignKey(Category, related_name='videos', on_delete=models.CASCADE)
     subject = models.ForeignKey(Subject, related_name='videos', on_delete=models.CASCADE)
     title = models.CharField(max_length=200)
     video_url = models.URLField()
@@ -26,6 +40,7 @@ class Video(models.Model):
 
 
 class MCQ(models.Model):
+    category = models.ForeignKey(Category, related_name='mcqs', on_delete=models.CASCADE)
     subject = models.ForeignKey(Subject, related_name='mcqs', on_delete=models.CASCADE)
     title = models.CharField(max_length=200)
     is_free = models.BooleanField(default=False)
@@ -79,6 +94,8 @@ class ClinicalCase(models.Model):
     """
     
     # A title field to easily identify each case
+
+    category = models.ForeignKey(Category, related_name='cases', on_delete=models.CASCADE)
     doctor = models.ForeignKey(Doctor, related_name='cases', on_delete=models.CASCADE)
     subject = models.ForeignKey(Subject, related_name='cases', on_delete=models.CASCADE)
     case_title = models.CharField(max_length=255, help_text="Enter the title for this clinical case, e.g., 'Cardiovascular Examination of Patient X'.")
@@ -138,9 +155,10 @@ class ClinicalCase(models.Model):
         ordering = ['-created_at'] # Show the most recent cases first
 
 
-from django.db import models
+
 
 class Flashcard(models.Model):
+    category = models.ForeignKey(Category, related_name='flashcards', on_delete=models.CASCADE)
     subject = models.ForeignKey(Subject, related_name='flashcards', on_delete=models.CASCADE)
     description = models.TextField(
         blank=True,
